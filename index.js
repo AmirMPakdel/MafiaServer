@@ -24,7 +24,9 @@ io.on('connection', (socket)=>{
 
     console.log('socket connected');
 
-    socket.on("join", (data)=>{RoomHandler.JoinRoom(socket, data)});
+    
+
+    socket.on("join", (data)=>{RoomHandler.JoinRoom(io, socket, data)});
 
     socket.on("send_message", (data)=>{MessageHandler(io, data)});
 

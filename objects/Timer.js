@@ -7,9 +7,9 @@ class Timer{
         this.room = room;
         this.end = false;
 
-        this.dayTime = 5;
-        this.courtTime = 5;
-        this.nightTime = 5;  
+        this.dayTime = 5000;
+        this.courtTime = 5000;
+        this.nightTime = 5000;  
 
         this.start();
     }
@@ -27,7 +27,7 @@ class Timer{
 
     beDay(cb){
         
-        if(!end){
+        if(!this.end){
 
             this.io.to(this.room).emit("itsDay");
             console.log("itsDay");
@@ -37,7 +37,7 @@ class Timer{
 
     beCourt(cb){
         
-        if(!end){
+        if(!this.end){
 
             this.io.to(this.room).emit("itsCourt");
             // give poeple options
@@ -48,7 +48,7 @@ class Timer{
 
     beNight(cb){
         
-        if(!end){
+        if(!this.end){
          
             this.io.to(this.room).emit("itsNight");
             // give mafia options

@@ -1,8 +1,9 @@
 const Room = require('../models/room');
+const Game = require('../objects/Game');
 
 const MAX_NOE = 2;
 
-async function JoinRoom (socket , data){
+async function JoinRoom (io, socket , data){
 
     console.log("join");
     
@@ -32,6 +33,8 @@ async function JoinRoom (socket , data){
     socket.join(the_room._id.toString(), ()=>{
         
         socket.emit("join_r", {room:the_room._id.toString()});
+
+        let g = new Game(io, the_room._id.toString());
         
     });
 }
