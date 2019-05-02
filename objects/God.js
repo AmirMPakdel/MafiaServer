@@ -1,10 +1,31 @@
+const Room = require("../models/room");
+
 const God = {
 
-    giveRoles: (io, room_id)=>{
+    giveRoles: async (io, room_id, cb)=>{
 
         // give the roles
-        
-        io.to(room_id).emit("roles_ready");
+
+        let room = await Room.findOne({_id:room_id});
+
+        let players = room.players;
+
+        players = giveRolesToPlayers(players);
+
+        room.players = players;
+
+        let res = await Room.updateOne(room);
+
+        if(res.nModified != 0){
+
+            io.to(room_id).emit("roles_ready");
+
+            cb();
+
+        }else{
+
+            console.log("err ->"+res.toString());
+        }
     },
 
     gameEndCheck: (io, room_id, gameObj)=>{
@@ -27,3 +48,25 @@ const God = {
         io.to(room_id).emit("xp", {});
     }
 }
+
+function giveRolesToPlayers(players){
+
+    let roles = ["mfa", "plc", "thf", "gdf", "snp"]
+
+    players.forEach(element => {
+        
+        let random = getRandomInt(roles.length);
+
+        element.role = roles[random];
+
+        roles.splice(random, 1); // removing the index
+    });
+
+    return players;
+}
+
+function getRandomInt(max) {
+    return Math.floor(Math.random() * Math.floor(max));
+}
+
+module.exports = God;

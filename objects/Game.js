@@ -1,11 +1,20 @@
 const Timer = require("./Timer");
+const Gode = require("./God");
 
 class Game{
 
-    constructor(io, room){
+    constructor(room_id){
 
-        this.timer = new Timer(io, room);
-        this.timer.start();
+        this.room_id = room_id;
+        this.timer = new Timer(room_id);
+    }
+
+    start(io){
+
+        Gode.giveRoles(io, this.room_id, ()=>{
+
+            this.timer.start(io);
+        });
     }
 }
 

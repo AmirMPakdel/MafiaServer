@@ -1,56 +1,54 @@
+const io = require("../index");
 
 class Timer{
 
-    constructor(io, room){
+    constructor(room_id){
 
-        this.io = io;
-        this.room = room;
+        this.room_id = room_id;
         this.end = false;
 
-        this.dayTime = 5000;
-        this.courtTime = 5000;
-        this.nightTime = 5000;  
-
-        this.start();
+        this.dayTime = 18000;
+        this.courtTime = 12000;
+        this.nightTime = 12000;
     }
 
-    start(){
+    start(io){
 
-        this.beDay(
-            ()=>setTimeout(()=>this.beCourt(
-                ()=>setTimeout(()=>this.beNight(
-                    ()=>setTimeout(()=>this.start(), this.nightTime)
+        this.beDay(io,
+            ()=>setTimeout(()=>this.beCourt(io,
+                ()=>setTimeout(()=>this.beNight(io,
+                    ()=>setTimeout(()=>this.start(io), this.nightTime)
                 ),this.courtTime)
             ), this.dayTime)
         );
     }
 
-    beDay(cb){
+    beDay(io, cb){
         
         if(!this.end){
 
-            this.io.to(this.room).emit("itsDay");
+            io.to(this.room_id).emit("itsDay");
             console.log("itsDay");
             cb();
         }
     }
 
-    beCourt(cb){
+    beCourt(io, cb){
         
         if(!this.end){
 
-            this.io.to(this.room).emit("itsCourt");
+            io.to(this.room_id).emit("itsCourt");
             // give poeple options
             console.log("itsCourt");
             cb();
         }
     }
 
-    beNight(cb){
+    beNight(io, cb){
         
         if(!this.end){
          
-            this.io.to(this.room).emit("itsNight");
+            io.to(this.room_id).emit("itsNight");
             // give mafia options
             console.log("itsNight");
             cb();

@@ -1,11 +1,10 @@
 const Room = require('../models/room');
 const Game = require('../objects/Game');
 
+
 const MAX_NOE = 2;
 
-async function JoinRoom (io, socket , data){
-
-    console.log("join");
+async function JoinRoom (io, socket ,gamesPool,  data){
     
     let rooms = await Room.find();
 
@@ -22,20 +21,30 @@ async function JoinRoom (io, socket , data){
     if(the_room == null){
 
         the_room = new Room();
+
+        console.log(the_room._id.toString());
+        
+
+        let newGame = new Game(the_room._id.toString());
+
+        gamesPool.set(the_room._id.toString(), newGame);
     }
 
     the_room.noe +=1;
 
-    the_room.save();
+    the_room.players.push({/*name:data.name*/name:"amir", role:""});
 
-    console.log("joinning");
+    the_room.save();
     
     socket.join(the_room._id.toString(), ()=>{
         
         socket.emit("join_r", {room:the_room._id.toString()});
 
-        let g = new Game(io, the_room._id.toString());
+        console.log("game is starting ->"+the_room._id.toString());
         
+        // starting the game
+        gamesPool.get(the_room._id.toString()).start(io);
+
     });
 }
 
