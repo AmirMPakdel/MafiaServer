@@ -14,18 +14,11 @@ const God = {
 
         room.players = players;
 
-        let res = await Room.updateOne(room);
+        await room.save();
+        
+        io.to(room_id).emit("roles_ready");
 
-        if(res.nModified != 0){
-
-            io.to(room_id).emit("roles_ready");
-
-            cb();
-
-        }else{
-
-            console.log("err ->"+res.toString());
-        }
+        cb();
     },
 
     gameEndCheck: (io, room_id, gameObj)=>{

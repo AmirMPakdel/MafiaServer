@@ -18,7 +18,7 @@ async function JoinRoom (io, socket ,gamesPool,  data){
         }
     });
 
-    if(the_room == null){
+    if(true/*the_room == null*/){
 
         the_room = new Room();
 
